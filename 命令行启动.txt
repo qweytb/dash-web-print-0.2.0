@@ -1,0 +1,8 @@
+granian --interface wsgi --host 0.0.0.0 --port 8050 app:app.server
+
+granian --interface wsgi --host 0.0.0.0 --port 8050 --workers 4 --blocking-threads 8 app:app.server
+
+
+python环境
+
+mamba activate drag_and_drop_2.0_env 

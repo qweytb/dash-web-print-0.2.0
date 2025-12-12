@@ -1,0 +1,3 @@
+2025-10-11 22:30:27 | WARNING  | 【prod】日志初始化完成，级别：WARNING → CRITICAL，输出：prod_YYYY-MM-DD.log
+2025-10-11 22:30:28 | WARNING  | 【prod】日志初始化完成，级别：WARNING → CRITICAL，输出：prod_YYYY-MM-DD.log
+2025-10-11 22:31:22 | WARNING  | 【prod】日志初始化完成，级别：WARNING → CRITICAL，输出：prod_YYYY-MM-DD.log

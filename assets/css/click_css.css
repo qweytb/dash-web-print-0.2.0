@@ -1,0 +1,60 @@
+/* styles.css */
+
+.hover-div {
+    padding: 0px 5px;
+    box-sizing: border-box;
+    /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
+    /* 可选：添加阴影 */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    /* 平滑过渡效果 */
+}
+
+.hover-div:hover {
+    background-color: #444444;
+    /* 鼠标悬停时的背景色 */
+    color: white;
+    /* 鼠标悬停时的文字颜色 */
+}
+
+
+
+/* ---------- 自定义 CheckCard 整体 ---------- */
+.my-checkcard {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 30px !important;
+    border: 1px solid #666666 !important;
+    border-radius: 0 !important;
+}
+
+/* ---------- 内容区 ---------- */
+.my-checkcard .ant-pro-checkcard-content {
+    padding: 0 !important;
+    width: auto !important;
+    height: 40px !important;
+    background-color: #666666 !important;
+}
+
+/* ---------- 描述文字 ---------- */
+.my-checkcard .ant-pro-checkcard-description {
+    font-size: 13px !important;
+    color: #ffffff !important;
+}
+
+/* ---------- 选中时对勾 ---------- */
+.my-checkcard.ant-pro-checkcard-checked::after {
+    opacity: 1 !important;
+    content: '●' !important;
+    color: #f30000 !important;
+    font-size: 24px !important;
+    position: absolute !important;
+    left: 0px !important;
+    bottom: 0px !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 30px;
+    height: 35px;
+    transition: none;
+}
