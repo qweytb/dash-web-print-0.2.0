@@ -1,7 +1,0 @@
-2025-09-29 16:43:05 | WARNING  | 【prod】日志初始化完成，级别：WARNING → CRITICAL，输出：prod_YYYY-MM-DD.log
-2025-09-29 16:43:36 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update
-2025-09-29 16:50:49 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update
-2025-09-29 16:54:33 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update
-2025-09-29 16:54:38 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update
-2025-09-29 17:01:58 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update
-2025-09-29 17:09:54 | WARNING  | 【拖动随机元素】未找到拖拽元素，返回 no_update

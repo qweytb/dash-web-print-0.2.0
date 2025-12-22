@@ -127,12 +127,8 @@ def preview_print_template(nClicks, data):
                 ),
                 fac.AntdSpace(
                     [
-                        fac.AntdButton(
-                            "弹窗打印", id="print-popup-window", size="middle", variant="dashed", color="primary"
-                        ),
-                        fac.AntdButton(
-                            "PDF打印", id="print-target-trigger-pdf", size="middle", variant="dashed", color="danger"
-                        ),
+                        fac.AntdButton("弹窗打印", id="print-popup-window", size="middle", variant="dashed", color="primary"),
+                        fac.AntdButton("PDF打印", id="print-target-trigger-pdf", size="middle", variant="dashed", color="danger"),
                         fac.AntdButton("静默打印", size="middle", variant="dashed", color="gold"),
                     ],
                     direction="vertical",

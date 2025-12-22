@@ -90,8 +90,8 @@ def handle_root_router_error(e):
     Input("root-url", "pathname"),
     State("root-url", "trigger"),
     prevent_initial_call=True,
-    on_error=handle_root_router_error,
-    running=[[Output("layout-top-progress", "spinning"), True, False]],
+    on_error=handle_root_router_error,  # 错误处理
+    running=[[Output("layout-top-progress", "spinning"), True, False]],  # 显示进度条
 )
 def root_router(pathname, trigger):
     """根节点路由控制"""
