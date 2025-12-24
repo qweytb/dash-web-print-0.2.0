@@ -67,7 +67,10 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-transverse",
-                        style=style(height=45),
+                        style=style(
+                            height=45,
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-transverse-click",
@@ -102,7 +105,10 @@ def layout():
                             size=3,
                         ),
                         id="drag-element-vertical",
-                        style=style(height=45),
+                        style=style(
+                            height=45,
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-vertical-click",
@@ -140,6 +146,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-rectangle",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-rectangle-click",
@@ -179,6 +188,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-text",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-text-click",
@@ -213,6 +225,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-picture",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-picture-click",
@@ -249,6 +264,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-qrcode",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-qrcode-click",
@@ -285,6 +303,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-barcode",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-barcode-click",
@@ -326,6 +347,9 @@ def layout():
                             direction="vertical",
                         ),
                         id="drag-element-table",
+                        style=style(
+                            cursor="grab",  # 鼠标手势
+                        ),
                     ),
                 ],
                 id="drag-element-table-click",
@@ -2328,6 +2352,8 @@ def data_source_layout(element_type: str = None):
                                     fac.AntdCenter(
                                         f"{k}",
                                         id=f"drag-print-data-source-{v}",
+                                        # 关键：加一个自定义属性 data-type="text"
+                                        **{"data-type": "text"},
                                         style={
                                             "backgroundColor": "#1677ff",
                                             "color": "white",
