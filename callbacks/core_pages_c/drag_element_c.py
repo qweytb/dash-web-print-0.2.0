@@ -421,61 +421,61 @@ def drag_element_cache_id(drag_element):
 
 
 # 选择卡片元素编辑属性
-# @app.callback(
-#     [
-#         Output("drag-element-property-attributes-form", "children", allow_duplicate=True),  # 属性配置表单
-#         Output("drag-element-data-source-scrollbar", "children"),  # 数据源
-#         Output("drag-container-inner-layout", "children", allow_duplicate=True),  # 拖拽布局
-#     ],
-#     [
-#         Input("drag-element-property-attributes-group", "value"),  # 获取选中的元素
-#     ],
-#     [
-#         State("layout-helper-config", "data"),  # 布局配置数据,
-#         State("drag-container-inner-layout", "children"),  # 拖拽布局区域的子组件
-#     ],
-#     prevent_initial_call=True,
-# )
-# def select_card_element_property_attributes(rnd_element, data, layout_children):
-#     """选择卡片元素编辑属性"""
-#     if not rnd_element:  # 未选择元素
-#         logger.debug(f"【选择卡片元素编辑属性】未选择元素，返回纸张元素属性")
-#         drag_canvas = data["drag_canvas"]
-#         element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
-#         # 获取元素的动态字段配置
-#         element_dynamic_field = drag_element.data_source_layout()
+@app.callback(
+    [
+        Output("drag-element-property-attributes-form", "children", allow_duplicate=True),  # 属性配置表单
+        Output("drag-element-data-source-scrollbar", "children"),  # 数据源
+        Output("drag-container-inner-layout", "children", allow_duplicate=True),  # 拖拽布局
+    ],
+    [
+        Input("drag-element-property-attributes-group", "value"),  # 获取选中的元素
+    ],
+    [
+        State("layout-helper-config", "data"),  # 布局配置数据,
+        State("drag-container-inner-layout", "children"),  # 拖拽布局区域的子组件
+    ],
+    prevent_initial_call=True,
+)
+def select_card_element_property_attributes(rnd_element, data, layout_children):
+    """选择卡片元素编辑属性"""
+    if not rnd_element:  # 未选择元素
+        logger.debug(f"【选择卡片元素编辑属性】未选择元素，返回纸张元素属性")
+        drag_canvas = data["drag_canvas"]
+        element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
+        # 获取元素的动态字段配置
+        element_dynamic_field = drag_element.data_source_layout()
 
-#         # 去掉所有元素的选中样式，防止和卡片选中样式渲染重复照常闪烁错误
-#         new_children = pages_utils.select_only_uuid(layout_children, None)
-#         return element_form, element_dynamic_field, new_children
+        # 去掉所有元素的选中样式，防止和卡片选中样式渲染重复照常闪烁错误
+        new_children = pages_utils.select_only_uuid(layout_children, None)
+        return element_form, element_dynamic_field, new_children
 
-#     logger.debug(f"【选择卡片元素编辑属性】已选择元素，返回元素属性{rnd_element}")
-#     element_data = data["drag_layout_list"].get(rnd_element, None)
-#     if not element_data:
-#         # # 显示纸张编辑的属性
-#         # drag_canvas = data["drag_canvas"]
-#         # element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
-#         # logger.debug(f"【选择卡片元素编辑属性】未获取元素属性表单{rnd_element}")
-#         # # 只更新表单，不改动数据源和布局
-#         # return element_form, dash.no_update, dash.no_update
-#         raise dash.exceptions.PreventUpdate  # 阻止更新
-#     else:
-#         # 获取该元素的表单
-#         element_form = drag_element.element_property_attributes_layout(
-#             element_config=element_data,
-#         )
-#         logger.debug(f"【选择卡片元素编辑属性】已获取元素属性表单{rnd_element}")
+    logger.debug(f"【选择卡片元素编辑属性】已选择元素，返回元素属性{rnd_element}")
+    element_data = data["drag_layout_list"].get(rnd_element, None)
+    if not element_data:
+        # # 显示纸张编辑的属性
+        # drag_canvas = data["drag_canvas"]
+        # element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
+        # logger.debug(f"【选择卡片元素编辑属性】未获取元素属性表单{rnd_element}")
+        # # 只更新表单，不改动数据源和布局
+        # return element_form, dash.no_update, dash.no_update
+        raise dash.exceptions.PreventUpdate  # 阻止更新
+    else:
+        # 获取该元素的表单
+        element_form = drag_element.element_property_attributes_layout(
+            element_config=element_data,
+        )
+        logger.debug(f"【选择卡片元素编辑属性】已获取元素属性表单{rnd_element}")
 
-#         # 获取元素的动态字段配置
-#         element_dynamic_field = drag_element.data_source_layout(
-#             element_type=element_data["element_type"],
-#         )
+        # 获取元素的动态字段配置
+        element_dynamic_field = drag_element.data_source_layout(
+            element_type=element_data["element_type"],
+        )
 
-#         # 操作的元素设置成选中
-#         new_children = pages_utils.select_only_uuid(layout_children, rnd_element)
-#         logger.debug(f"【选择卡片元素编辑属性】已操作元素, 给布局的属性加上选中样式{rnd_element}")
+        # 操作的元素设置成选中
+        new_children = pages_utils.select_only_uuid(layout_children, rnd_element)
+        logger.debug(f"【选择卡片元素编辑属性】已操作元素, 给布局的属性加上选中样式{rnd_element}")
 
-#         return element_form, element_dynamic_field, new_children
+        return element_form, element_dynamic_field, new_children
 
 
 # 删除元素
