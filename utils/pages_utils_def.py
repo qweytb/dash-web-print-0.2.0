@@ -46,10 +46,11 @@ def select_only_uuid(components: Union[List[Any], Any], target_uuid: str) -> Uni
                 if rid.get("type") == "RND" and rid.get("id") == target_uuid:
                     node["props"]["selected"] = True
                     node["props"]["selectedStyle"] = {
-                        # "border": "2px solid #1976D2",  # 粗蓝框
-                        "backgroundColor": "#e3f2fd",  # 淡蓝背景（实色）
-                        "boxShadow": "none",
-                        "boxSizing": "border-box",  # 🔥 关键：边框算在总尺寸内
+                        "border": "2px solid #1890ff",  # Ant Design 蓝色
+                        "borderRadius": "4px",
+                        "backgroundColor": "#e6f7ff",  # 更明显的淡蓝背景
+                        "boxShadow": "0 0 0 4px rgba(24, 144, 255, 0.2), 0 4px 12px rgba(24, 144, 255, 0.15)",  # 外发光 + 投影
+                        "boxSizing": "border-box",
                     }
                 else:
                     node["props"]["selected"] = False
