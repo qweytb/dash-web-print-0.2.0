@@ -581,7 +581,7 @@ def drag_element_layout(
             "thick": element_config_.get("thick", 2),  # 线宽
             "color": element_config_.get("color", "#000000"),  # 线条颜色
             "style": element_config_.get("style", "solid"),  # 线条样式
-            "length": element_config_.get("length", 200),  # 线段长度
+            "length": element_config_.get("length", 100),  # 线段长度
             "lock": element_config_.get("lock", False),  # 是否锁定
             "x": element_config_.get("x", element_x_y["x"]),  # x坐标
             "y": element_config_.get("y", element_x_y["y"]),  # y坐标
@@ -605,7 +605,7 @@ def drag_element_layout(
             "thick": element_config_.get("thick", 2),  # 线宽
             "color": element_config_.get("color", "#000000"),  # 颜色
             "style": element_config_.get("style", "solid"),  # 样式
-            "length": element_config_.get("length", 200),  # 长度
+            "length": element_config_.get("length", 100),  # 长度
             "lock": element_config_.get("lock", False),  # 锁定
             "x": element_config_.get("x", element_x_y["x"]),
             "y": element_config_.get("y", element_x_y["y"]),
@@ -628,8 +628,8 @@ def drag_element_layout(
             "thick": element_config_.get("thick", 2),  # 线宽
             "color": element_config_.get("color", "#000000"),  # 颜色
             "style": element_config_.get("style", "solid"),  # 样式
-            "width": element_config_.get("width", 200),  # 宽度
-            "height": element_config_.get("height", 200),  # 高度
+            "width": element_config_.get("width", 80),  # 宽度
+            "height": element_config_.get("height", 80),  # 高度
             "radius": element_config_.get("radius", 0),  # 圆角
             "lock": element_config_.get("lock", False),
             "x": element_config_.get("x", element_x_y["x"]),
@@ -664,7 +664,7 @@ def drag_element_layout(
             "text": element_config_.get("text", "示例文本"),  # 文本内容
             "fontSize": element_config_.get("fontSize", 14),  # 字体大小
             "color": element_config_.get("color", "#000000"),  # 颜色
-            "width": element_config_.get("width", 100),  # 字体容器宽
+            "width": element_config_.get("width", 80),  # 字体容器宽
             "height": element_config_.get("height", 26),  # 字体容器高
             "style": element_config_.get("style", "static"),  # 字体数据类型
             "size": element_config_.get("size", 0),  # 字体间隔
@@ -700,8 +700,8 @@ def drag_element_layout(
     elif element_type == "picture":
         element_config = {
             "src": element_config_.get("src", "123456"),  # 图片的显示内容
-            "height": element_config_.get("height", 100),  # 图片的高度
-            "width": element_config_.get("width", 100),  # 图片的宽度
+            "height": element_config_.get("height", 80),  # 图片的高度
+            "width": element_config_.get("width", 80),  # 图片的宽度
             "style": element_config_.get("style", "static"),  # 图片的数据类型
             "radius": element_config_.get("radius", 0),  # 圆角
             "lock": element_config_.get("lock", False),  # 锁定
@@ -733,7 +733,7 @@ def drag_element_layout(
     elif element_type == "qrcode":
         element_config = {
             "value": element_config_.get("value", "123456789"),  # 二维码内容
-            "size": element_config_.get("size", 100),  # 二维码大小
+            "size": element_config_.get("size", 70),  # 二维码大小
             "style": element_config_.get("style", "static"),  # 二维码数据类型
             "lock": element_config_.get("lock", False),  # 锁定
             "x": element_config_.get("x", element_x_y["x"]),
@@ -758,10 +758,10 @@ def drag_element_layout(
 
     elif element_type == "barcode":
         element_config = {
-            "value": element_config_.get("value", "123456"),  # 条形码内容
-            "fontSize": element_config.get("fontSize", 16),  # 字体大小
+            "value": element_config_.get("value", "123456789"),  # 条形码内容
+            "fontSize": element_config.get("fontSize", 10),  # 字体大小
             # "width": element_config_.get("width", 200),  # 条形码宽度
-            "height": element_config_.get("height", 30),  # 条形码高度
+            "height": element_config_.get("height", 25),  # 条形码高度
             "lock": element_config_.get("lock", False),  # 锁定
             "x": element_config_.get("x", element_x_y["x"]),
             "y": element_config_.get("y", element_x_y["y"]),
@@ -793,10 +793,10 @@ def drag_element_layout(
     elif element_type == "table":
         element_config = {
             "thead": element_config.get("thead", 1),  # 是否显示表头
-            "row": element_config.get("row", 5),  # 行数
-            "row_h": element_config.get("row_h", 30),  # 行高
-            "row_w": element_config.get("row_w", 50),  # 行宽
-            "width": element_config.get("width", 400),  # 表宽
+            "row": element_config.get("row", 5),  # 列数
+            "row_h": element_config.get("row_h", 20),  # 行高
+            "row_w": element_config.get("row_w", 30),  # 行宽
+            "width": element_config.get("width", 300),  # 表宽
             "lock": element_config_.get("lock", False),  # 锁定
             "x": element_config_.get("x", element_x_y["x"]),
             "y": element_config_.get("y", element_x_y["y"]),
@@ -2251,7 +2251,7 @@ def element_property_attributes_layout(
                         mode="text-area",
                         autoSize={"minRows": 10, "maxRows": 10},
                     ),
-                    label="数据文本",
+                    # label="数据文本",
                 ),
                 span=24,
             ),

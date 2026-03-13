@@ -101,10 +101,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 100;
-        canvas.height = 60;
+        canvas.height = 100;
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#000000';
-        ctx.strokeRect(10, 10, 80, 40);
+        ctx.strokeRect(10, 10, 80, 80);
         const img = new Image();
         img.src = canvas.toDataURL();
         return img;
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         ctx.setLineDash([5, 3]);
         ctx.lineWidth = 1;
         ctx.strokeStyle = '#555555';
-        ctx.strokeRect(10, 10, 80, 20);
+        ctx.strokeRect(10, 10, 80, 26);
         ctx.font = 'bold 20px Arial';
         ctx.fillStyle = '#555555';
         ctx.textAlign = 'center';
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 100;
-        canvas.height = 60;
+        canvas.height = 100;
         ctx.lineWidth = 2;
         ctx.strokeStyle = '#000000';
         ctx.strokeRect(10, 10, 80, 40);

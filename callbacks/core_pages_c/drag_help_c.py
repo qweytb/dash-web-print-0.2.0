@@ -49,8 +49,8 @@ def add_drag_help_line(
         help_type, extent = "lengthways", container_height
     elif "crosswise" in triggered:
         help_type, extent = "crosswise", container_width
-    # else:
-    #     return dash.no_update  # 无关触发 → 不更新
+    else:
+        return dash.no_update  # 无关触发 → 不更新
 
     # 3. 生成辅助线
     logger.info(f"添加布局辅助线，类型：{help_type}，尺寸：{extent}")
@@ -88,13 +88,13 @@ def grid_lines_layout(nClicks, data):
         logger.info("【网格线】初始状态为开启，直接渲染网格线")
         return data, drag_help.help_layout("gridding"), True
 
-    # ③ 切换显示状态
-    show_grid = not show_grid
-    data["show_grid"] = show_grid
-
     # ② 未点击按钮 → 不处理
     if not nClicks or "gridding" not in triggered:
         return dash.no_update
+
+    # ③ 切换显示状态
+    show_grid = not show_grid
+    data["show_grid"] = show_grid
 
     if show_grid:
         logger.info("【网格线】已开启，组件将自动吸附网格")
@@ -122,16 +122,15 @@ def grid_lines_layout(nClicks, data):
     ],
     prevent_initial_call=True,
 )
-def zoom_in(zoom_in, zoom_out, zoom_out_data, width, height):
-    """缩放比例 +1"""
-    """缩放比例 +1"""
+def zoom_in(zoom_in, zoom_out, zoom_data, width, height):
+    """缩放比例调整"""
 
     if not zoom_in and not zoom_out:  # 无触发
         logger.info(f"【缩放比例】无触发器，返回 no_update, 显示当前比例")
-        zoom_out_data["zoom_scale"] = 1.0
+        zoom_data["zoom_scale"] = 1.0
         return (
-            zoom_out_data,
-            f"{zoom_out_data['zoom_scale'] * 100:.0f}%",
+            zoom_data,
+            f"{zoom_data['zoom_scale'] * 100:.0f}%",
             dash.no_update,
         )
 
@@ -152,29 +151,29 @@ def zoom_in(zoom_in, zoom_out, zoom_out_data, width, height):
     logger.info(f"【缩放比例】触发器：{triggered}")
 
     if "zoom-in" in triggered:
-        zoom_out_data["zoom_scale"] = round(zoom_out_data["zoom_scale"] + 0.1, 1)
-        logger.info(f"【缩放比例】已放大，当前比例：{zoom_out_data['zoom_scale']}")
+        zoom_data["zoom_scale"] = round(zoom_data["zoom_scale"] + 0.1, 1)
+        logger.info(f"【缩放比例】已放大，当前比例：{zoom_data['zoom_scale']}")
 
     if "zoom-out" in triggered:
-        zoom_out_data["zoom_scale"] = round(zoom_out_data["zoom_scale"] - 0.1, 1)
-        logger.info(f"【缩放比例】已缩小，当前比例：{zoom_out_data['zoom_scale']}")
+        zoom_data["zoom_scale"] = round(zoom_data["zoom_scale"] - 0.1, 1)
+        logger.info(f"【缩放比例】已缩小，当前比例：{zoom_data['zoom_scale']}")
 
     rawStyle = f"""
             #drag-container-inner-layout {{
                 position: relative; /* 确保容器是定位上下文 */
                 z-index: 1; /* 确保内容在网格上方 */
                 transform-origin: 0 0;     /* 左上角 */
-                transform: scale({zoom_out_data["zoom_scale"]});
+                transform: scale({zoom_data["zoom_scale"]});
                 transition: transform .2s;                                                   
                 # background-color: rgba(0, 0, 0, 0.25);
             }}
             #drag-container-inner {{
-                width: {width * zoom_out_data["zoom_scale"]}px;
-                height: {height * zoom_out_data["zoom_scale"]}px;
+                width: {width * zoom_data["zoom_scale"]}px;
+                height: {height * zoom_data["zoom_scale"]}px;
             }}
             """
 
-    return zoom_out_data, f"{zoom_out_data['zoom_scale'] * 100:.0f}%", rawStyle
+    return zoom_data, f"{zoom_data['zoom_scale'] * 100:.0f}%", rawStyle
 
 
 # 清除缓存
@@ -188,25 +187,24 @@ def zoom_in(zoom_in, zoom_out, zoom_out_data, width, height):
 )
 def clear_pycache(nClicks, data):
     """清除缓存"""
-    if not nClicks:
+    if not nClicks or "help-delete-data" not in dash.ctx.triggered_id:
         return dash.no_update
+
     logger.info("【清除缓存】开始清理缓存")
-    if "help-delete-data" in dash.ctx.triggered_id:
-        set_props(
-            "global-message",
-            {
-                "children": [
-                    fac.AntdMessage(
-                        content="【提示】清除当前缓存，删除布局，初始化设定",
-                        type="error",
-                        maxCount=3,
-                    ),
-                    fuc.FefferyReload(delay=2000, reload=True),
-                ]
-            },
-        )
-        # 清空布局
-        # data["drag_layout_list"] = {}
-        data = BaseConfig.layout_helper_config
-        return [], data, []
-    return dash.no_update
+    set_props(
+        "global-message",
+        {
+            "children": [
+                fac.AntdMessage(
+                    content="【提示】清除当前缓存，删除布局，初始化设定",
+                    type="error",
+                    maxCount=3,
+                ),
+                fuc.FefferyReload(delay=2000, reload=True),
+            ]
+        },
+    )
+    # 清空布局
+    # data["drag_layout_list"] = {}
+    data = BaseConfig.layout_helper_config
+    return [], data, []

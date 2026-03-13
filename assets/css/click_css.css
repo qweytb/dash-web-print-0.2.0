@@ -25,6 +25,8 @@
     width: 30px !important;
     border: 1px solid #666666 !important;
     border-radius: 0 !important;
+    position: relative !important;
+    overflow: hidden !important;
 }
 
 /* ---------- 内容区 ---------- */
@@ -41,20 +43,25 @@
     color: #ffffff !important;
 }
 
-/* ---------- 选中时对勾 ---------- */
+/* ---------- 选中时对勾（默认状态 - 未选中） ---------- */
+.my-checkcard::after {
+    content: '' !important;
+    position: absolute !important;
+    left: 50% !important;
+    top: 50% !important;
+    transform: translate(-50%, -50%) scale(0) !important;
+    width: 15px !important;
+    height: 15px !important;
+    background-color: #ff4d4f !important;
+    border-radius: 50% !important;
+    border: 3px solid #ffffff !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+    opacity: 0 !important;
+    transition: all 0.25s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+/* ---------- 选中时对勾（选中状态） ---------- */
 .my-checkcard.ant-pro-checkcard-checked::after {
     opacity: 1 !important;
-    content: '●' !important;
-    color: #f30000 !important;
-    font-size: 24px !important;
-    position: absolute !important;
-    left: 0px !important;
-    bottom: 0px !important;
-    border: none;
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    width: 30px;
-    height: 35px;
-    transition: none;
+    transform: translate(-50%, -50%) scale(1) !important;
 }

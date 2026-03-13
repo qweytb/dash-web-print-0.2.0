@@ -176,104 +176,134 @@ def drag_element_rnd_layout(
         logger.warning("【拖动随机元素】未找到拖拽元素，返回 no_update")
         return dash.no_update
 
-    triggered = dash.ctx.triggered_id
+    triggered = dash.ctx.triggered
 
-    if not triggered:  # 拖拽元素不存在
-        logger.warning("【拖动随机元素】未找到拖拽元素，返回 no_update")
+    if not triggered:
+        logger.warning("【拖动随机元素】未找到触发源，返回 no_update")
         return dash.no_update
-    logger.debug(f"【拖动随机元素】触发源：{triggered}")
+
+    # 调试：打印所有参数
+    logger.debug(f"【拖动随机元素】检查网格吸附状态：{checked}")
+    logger.debug(f"【拖动随机元素】layout_children数量：{len(layout_children)}")
+    logger.debug(f"【拖动随机元素】data keys：{list(data.keys())}")
+
+    # 如果 checked 是字符串（从某个状态获取），尝试转换
+    if isinstance(checked, str):
+        checked = checked.lower() == "true"
+        logger.debug(f"【拖动随机元素】转换后的checked值：{checked}")
+
+    # 获取触发源信息
+    prop_id_str = triggered[0]["prop_id"] if triggered else ""
+    logger.debug(f"【拖动随机元素】触发源原始字符串：{prop_id_str}")
+
+    # 解析 prop_id 字符串，支持多种格式
+    trigger_id = None
+    import re
+
+    if "#" in prop_id_str:
+        # 格式: "type#id.property"
+        parts = prop_id_str.split("#")
+        trigger_id = parts[1].split(".")[0]  # 获取 id 部分
+    else:
+        # 可能是 JSON 字符串，如 {"id":"3c0a9980-2f2b-4354-94a0-e5005df1850d","type":"RND"}.position
+        # 使用正则提取 id
+        id_match = re.search(r'"id"\s*:\s*"([^"]+)"', prop_id_str)
+        if id_match:
+            trigger_id = id_match.group(1)
+        else:
+            # 尝试其他格式
+            id_match = re.search(r'\{["\']id["\']:\s*["\']([^"\']+)["\']', prop_id_str)
+            if id_match:
+                trigger_id = id_match.group(1)
+            else:
+                logger.warning(f"【拖动随机元素】无法从prop_id中提取元素ID：{prop_id_str}")
+                trigger_id = None
+
     # 1. 定位索引
-    drag_rnd_id = triggered["id"]
+    drag_rnd_id = trigger_id
+    if not drag_rnd_id:
+        logger.warning("【拖动随机元素】未找到触发元素ID，返回 no_update")
+        return dash.no_update
+
     try:
         idx = next(i for i, full_id in enumerate(rnd_key) if full_id.startswith(drag_rnd_id))
     except StopIteration:
         logger.warning("【拖动随机元素】未找到对应索引，返回 no_update")
         return dash.no_update
+
     # 判断元素坐标是否有变动
     element_data = data["drag_layout_list"][drag_rnd_id]
 
-    # 1. 读取坐标
+    # 读取坐标（只读取一次）
     x, y = rnd_position[idx]["x"], rnd_position[idx]["y"]
-    logger.debug(f"【拖动随机元素】原始坐标：({x},{y})")
-    # 2. 读取坐标与尺寸
-    x, y = rnd_position[idx]["x"], rnd_position[idx]["y"]
+    logger.debug(f"【拖动随机元素】触发元素：{drag_rnd_id} 坐标：({x},{y})")
+
+    # 读取坐标与尺寸
     size = rnd_size[idx] or {}
     w = size.get("width", element_data["element_config"].get("width", 0))
     h = size.get("height", element_data["element_config"].get("height", 0))
     # 处理宽高去掉单位
-    w = (
-        w
-        if w is None
-        else int(w[:-2])
-        if isinstance(w, str) and w.endswith(("px", "pt", "em", "rem"))
-        else w
-        if isinstance(w, int)
-        else 0
-    )
-    h = (
-        h
-        if h is None
-        else int(h[:-2])
-        if isinstance(h, str) and h.endswith(("px", "pt", "em", "rem"))
-        else h
-        if isinstance(h, int)
-        else 0
-    )
+    w = w if w is None else int(w[:-2]) if isinstance(w, str) and w.endswith(("px", "pt", "em", "rem")) else w if isinstance(w, int) else 0
+    h = h if h is None else int(h[:-2]) if isinstance(h, str) and h.endswith(("px", "pt", "em", "rem")) else h if isinstance(h, int) else 0
     logger.debug(f"【拖动随机元素】元素尺寸：({w},{h})")
 
     # 解析元素类型
     element_type = rnd_key[idx].split("+")[1]
     logger.debug(f"【拖动随机元素】元素类型：{element_type}")
 
-    # 🔒 忽略 ≤1px 的抖动（含坐标 & 宽高）
+    # 🔒 忽略 ≤2px 的抖动（含坐标 & 宽高），防止快速拖动时频繁更新
     old = element_data["element_config"]
-    # print(w, h)
-    if (
-        abs(x - int(old.get("x", x))) <= 1
-        and abs(y - int(old.get("y", y))) <= 1
-        and abs(w - int(old.get("width", w))) <= 1
-        and abs(h - int(old.get("height", h))) <= 1
-    ):
-        logger.debug("【拖动随机元素】忽略微变动, 返回 no_update")
-        raise dash.exceptions.PreventUpdate  # 拦住微变动 → 抛异常 > 马上中断整个回调
+    old_x, old_y = int(old.get("x", 0)), int(old.get("y", 0))
 
-    # 4. 网格吸附
+    logger.debug(f"【拖动随机元素】检测到移动：({old_x},{old_y}) -> ({x},{y})")
+
+    if abs(x - old_x) <= 2 and abs(y - old_y) <= 2:
+        logger.debug(f"【拖动随机元素】忽略微变动({x},{y}), 返回 no_update")
+        raise dash.exceptions.PreventUpdate
+
+    # 4. 网格吸附（只在有效移动时才执行吸附）
     if checked:
-        # x = (x // 20) * 20
-        # y = (y // 20) * 20
-        x = x - x % 20 if x % 20 < 10 else x + (20 - x % 20)
-        y = y - y % 20 if y % 20 < 10 else y + (20 - y % 20)
-        logger.debug(f"【拖动随机元素】吸附后坐标：({x},{y})")
+        logger.debug(f"【拖动随机元素】网格吸附已开启，进行吸附计算")
+        # 计算当前网格位置
+        current_x = x - x % 20 if x % 20 < 10 else x + (20 - x % 20)
+        current_y = y - y % 20 if y % 20 < 10 else y + (20 - y % 20)
+
+        # 只有当坐标变化超过 5px 时才执行吸附，避免微小移动时吸附导致跳回
+        if abs(current_x - old_x) > 5 or abs(current_y - old_y) > 5:
+            x = current_x
+            y = current_y
+            logger.debug(f"【拖动随机元素】吸附后坐标：({x},{y})")
+        else:
+            # 坐标变化很小，保持原坐标不变，避免跳回
+            x = old_x
+            y = old_y
+            logger.debug(f"【拖动随机元素】坐标变化小于阈值，保持原坐标：({x},{y})")
+    else:
+        logger.debug(f"【拖动随机元素】网格吸附已关闭，保持原坐标：({x},{y})")
 
     # 5. 删除旧布局
+    logger.debug(f"【拖动随机元素】删除前元素数量：{len(layout_children)}")
     layout_children = pages_utils.remove_rnd_by_uuid(rnd_list=layout_children, target_uuid=drag_rnd_id)
+    logger.debug(f"【拖动随机元素】删除后元素数量：{len(layout_children)}")
 
     # 删除元素缓存
+    logger.debug(f"【拖动随机元素】从缓存中移除：{drag_rnd_id}")
+    logger.debug(f"【拖动随机元素】缓存中所有元素：{list(data['drag_layout_list'].keys())}")
     element_data = data["drag_layout_list"].pop(drag_rnd_id)
+    logger.debug(f"【拖动随机元素】元素原始坐标：({element_data['element_config']['x']}, {element_data['element_config']['y']})")
     element_data["element_config"]["x"] = x
     element_data["element_config"]["y"] = y
+    logger.debug(f"【拖动随机元素】更新后坐标：({x}, {y})")
     if rnd_size[idx]:
         # 获取组件的宽高
         element_w = rnd_size[idx].get("width")
         element_h = rnd_size[idx].get("height")
         # 获取组件的高度宽度
         element_data["element_config"]["width"] = (
-            element_w
-            if element_w is None
-            else int(element_w[:-2])
-            if isinstance(element_w, str) and element_w.endswith(("px", "pt", "em", "rem"))
-            else element_w
-            if isinstance(element_w, int)
-            else 0
+            element_w if element_w is None else int(element_w[:-2]) if isinstance(element_w, str) and element_w.endswith(("px", "pt", "em", "rem")) else element_w if isinstance(element_w, int) else 0
         )
         element_data["element_config"]["height"] = (
-            element_h
-            if element_h is None
-            else int(element_h[:-2])
-            if isinstance(element_h, str) and element_h.endswith(("px", "pt", "em", "rem"))
-            else element_h
-            if isinstance(element_h, int)
-            else 0
+            element_h if element_h is None else int(element_h[:-2]) if isinstance(element_h, str) and element_h.endswith(("px", "pt", "em", "rem")) else element_h if isinstance(element_h, int) else 0
         )
 
     # 获取新元素布局
@@ -391,61 +421,61 @@ def drag_element_cache_id(drag_element):
 
 
 # 选择卡片元素编辑属性
-@app.callback(
-    [
-        Output("drag-element-property-attributes-form", "children", allow_duplicate=True),  # 属性配置表单
-        Output("drag-element-data-source-scrollbar", "children"),  # 数据源
-        Output("drag-container-inner-layout", "children", allow_duplicate=True),  # 拖拽布局
-    ],
-    [
-        Input("drag-element-property-attributes-group", "value"),  # 获取选中的元素
-    ],
-    [
-        State("layout-helper-config", "data"),  # 布局配置数据,
-        State("drag-container-inner-layout", "children"),  # 拖拽布局区域的子组件
-    ],
-    prevent_initial_call=True,
-)
-def select_card_element_property_attributes(rnd_element, data, layout_children):
-    """选择卡片元素编辑属性"""
-    if not rnd_element:  # 未选择元素
-        logger.debug(f"【选择卡片元素编辑属性】未选择元素，返回纸张元素属性")
-        drag_canvas = data["drag_canvas"]
-        element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
-        # 获取元素的动态字段配置
-        element_dynamic_field = drag_element.data_source_layout()
+# @app.callback(
+#     [
+#         Output("drag-element-property-attributes-form", "children", allow_duplicate=True),  # 属性配置表单
+#         Output("drag-element-data-source-scrollbar", "children"),  # 数据源
+#         Output("drag-container-inner-layout", "children", allow_duplicate=True),  # 拖拽布局
+#     ],
+#     [
+#         Input("drag-element-property-attributes-group", "value"),  # 获取选中的元素
+#     ],
+#     [
+#         State("layout-helper-config", "data"),  # 布局配置数据,
+#         State("drag-container-inner-layout", "children"),  # 拖拽布局区域的子组件
+#     ],
+#     prevent_initial_call=True,
+# )
+# def select_card_element_property_attributes(rnd_element, data, layout_children):
+#     """选择卡片元素编辑属性"""
+#     if not rnd_element:  # 未选择元素
+#         logger.debug(f"【选择卡片元素编辑属性】未选择元素，返回纸张元素属性")
+#         drag_canvas = data["drag_canvas"]
+#         element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
+#         # 获取元素的动态字段配置
+#         element_dynamic_field = drag_element.data_source_layout()
 
-        # 去掉所有元素的选中样式，防止和卡片选中样式渲染重复照常闪烁错误
-        new_children = pages_utils.select_only_uuid(layout_children, None)
-        return element_form, element_dynamic_field, new_children
+#         # 去掉所有元素的选中样式，防止和卡片选中样式渲染重复照常闪烁错误
+#         new_children = pages_utils.select_only_uuid(layout_children, None)
+#         return element_form, element_dynamic_field, new_children
 
-    logger.debug(f"【选择卡片元素编辑属性】已选择元素，返回元素属性{rnd_element}")
-    element_data = data["drag_layout_list"].get(rnd_element, None)
-    if not element_data:
-        # # 显示纸张编辑的属性
-        # drag_canvas = data["drag_canvas"]
-        # element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
-        # logger.debug(f"【选择卡片元素编辑属性】未获取元素属性表单{rnd_element}")
-        # # 只更新表单，不改动数据源和布局
-        # return element_form, dash.no_update, dash.no_update
-        raise dash.exceptions.PreventUpdate  # 阻止更新
-    else:
-        # 获取该元素的表单
-        element_form = drag_element.element_property_attributes_layout(
-            element_config=element_data,
-        )
-        logger.debug(f"【选择卡片元素编辑属性】已获取元素属性表单{rnd_element}")
+#     logger.debug(f"【选择卡片元素编辑属性】已选择元素，返回元素属性{rnd_element}")
+#     element_data = data["drag_layout_list"].get(rnd_element, None)
+#     if not element_data:
+#         # # 显示纸张编辑的属性
+#         # drag_canvas = data["drag_canvas"]
+#         # element_form = drag_element.element_property_attributes_layout(element_config=drag_canvas)
+#         # logger.debug(f"【选择卡片元素编辑属性】未获取元素属性表单{rnd_element}")
+#         # # 只更新表单，不改动数据源和布局
+#         # return element_form, dash.no_update, dash.no_update
+#         raise dash.exceptions.PreventUpdate  # 阻止更新
+#     else:
+#         # 获取该元素的表单
+#         element_form = drag_element.element_property_attributes_layout(
+#             element_config=element_data,
+#         )
+#         logger.debug(f"【选择卡片元素编辑属性】已获取元素属性表单{rnd_element}")
 
-        # 获取元素的动态字段配置
-        element_dynamic_field = drag_element.data_source_layout(
-            element_type=element_data["element_type"],
-        )
+#         # 获取元素的动态字段配置
+#         element_dynamic_field = drag_element.data_source_layout(
+#             element_type=element_data["element_type"],
+#         )
 
-        # 操作的元素设置成选中
-        new_children = pages_utils.select_only_uuid(layout_children, rnd_element)
-        logger.debug(f"【选择卡片元素编辑属性】已操作元素, 给布局的属性加上选中样式{rnd_element}")
+#         # 操作的元素设置成选中
+#         new_children = pages_utils.select_only_uuid(layout_children, rnd_element)
+#         logger.debug(f"【选择卡片元素编辑属性】已操作元素, 给布局的属性加上选中样式{rnd_element}")
 
-        return element_form, element_dynamic_field, new_children
+#         return element_form, element_dynamic_field, new_children
 
 
 # 删除元素
@@ -569,6 +599,26 @@ app.clientside_callback(
     """values => values""",
     Output("element-property-attributes-form-debounce", "sourceProp"),
     Input("element-property-attributes-form", "values"),
+    prevent_initial_call=True,
+)
+
+
+# 拖动元素的防抖回调
+app.clientside_callback(
+    """
+    (x, y, old_x, old_y) => {
+        // 如果坐标变化很小，返回 no_update
+        if (Math.abs(x - old_x) < 2 && Math.abs(y - old_y) < 2) {
+            return null;
+        }
+        return {x, y, old_x, old_y};
+    }
+    """,
+    Output("drag-element-position-cache", "data"),
+    [
+        Input({"type": "RND", "id": ALL}, "position"),
+    ],
+    State("drag-element-position-cache", "data"),
     prevent_initial_call=True,
 )
 
