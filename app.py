@@ -117,4 +117,4 @@ def root_router(pathname, trigger):
 if __name__ == "__main__":
     # 非正式环境下开发调试预览用
     # 生产环境推荐使用gunicorn启动
-    app.run(host="0.0.0.0", port=8050, debug=True)
+    app.run(host="127.0.0.1", port=8050, debug=True)
