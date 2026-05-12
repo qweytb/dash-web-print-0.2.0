@@ -17,7 +17,7 @@ import views.core_pages.drag_function as drag_function
 from views.core_pages import drag_element
 
 
-# 拖阻元素的属性编辑
+# 拖拽元素的属性编辑
 @app.callback(
     Output("drag-element-picture", "style"),
     Output("drag-element-data", "style"),
@@ -26,10 +26,11 @@ from views.core_pages import drag_element
     prevent_initial_call=True,
 )
 def drag_element_property_attributes(value):
-    if not value:
-        return dash.no_update
+
     # print(value)
     list_ = [style(display="block"), style(display="block"), style(display="block")]
+    if not value:
+        return [style(display="none"), style(display="none"), style(display="none")]
     if "picture-list" not in value:
         list_[0] = style(display="none")
     if "picture-data" not in value:
