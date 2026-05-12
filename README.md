@@ -6,6 +6,9 @@
 ## 项目预览demo
 <a href="http://bjzs.yangtianbao.cn" target="_blank"> 打印布局设计器</a>
 
+## 项目预览demo
+<img src="http://bjzs.yangtianbao.cn" width="100%" />
+
 ## 项目特色：纯Python技术栈
 
 我们的项目完全基于Python生态系统构建，体现了Python在Web开发领域的强大能力和灵活性。作为纯Python项目，我们充分利用了Python丰富的库和框架，实现了从前端到后端的完整解决方案，同时保持了代码的简洁性和可维护性。
