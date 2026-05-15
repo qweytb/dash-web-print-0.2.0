@@ -8,7 +8,7 @@ class BaseConfig:
     app_title: str = "布局助手"
 
     # 应用版本
-    app_version: str = "0.2.1"
+    app_version: str = "0.2.2"
 
     # 部署环境 dev:开发环境  prod:生产环境  test:测试环境
     deploy_env: str = "dev"
