@@ -388,12 +388,11 @@ def nClicks_element_property_attributes(
     Output("drag-element-property-attributes-group", "children"),  # 卡片元素列表
     Output("drag-element-property-attributes-form", "children", allow_duplicate=True),  # 属性配置表单
     Output("drag-container-inner-layout", "style", allow_duplicate=True),
-    Input("help-refresh-layout", "nClicks"),
     Input("layout-helper-config", "data"),  # 布局配置数据,
     State("drag-container-inner-layout", "children"),  # 拖拽布局区域的子组件
     prevent_initial_call=True,
 )
-def init_load_layout(nClicks, data, layout_children):
+def init_load_layout(data, layout_children):
     """初始化加载布局"""
 
     triggered = dash.ctx.triggered_id

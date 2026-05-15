@@ -38,322 +38,410 @@ def _to_dict(obj: Any) -> Any:
 def layout():
     return fac.AntdSpace(
         [
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素横线
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-transverse",
-                        data={"info": "transverse"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                html.Div(
-                                    style=style(
-                                        width=40,
-                                        borderBottom="4px solid #FFF",
-                                        borderRadius=10,
-                                    ),
-                                ),
-                                fac.AntdCenter(
-                                    "横线",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
-                                    ),
-                                ),
-                            ],
-                            size=3,
-                            direction="vertical",
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素横线
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-transverse",
+                            data={"info": "transverse"},
                         ),
-                        id="drag-element-transverse",
-                        style=style(
-                            height=45,
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-transverse-click",
-                className="hover-div",
-            ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素竖线
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-vertical",
-                        data={"info": "vertical"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                html.Div(
-                                    style=style(
-                                        height=30,
-                                        borderLeft="4px solid #FFF",
-                                        borderRadius=5,
-                                    ),
-                                ),
-                                fac.AntdCenter(
-                                    "竖线",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
-                                        width=10,
-                                    ),
-                                ),
-                            ],
-                            size=3,
-                        ),
-                        id="drag-element-vertical",
-                        style=style(
-                            height=45,
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-vertical-click",
-                className="hover-div",
-            ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素矩形
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-rectangle",
-                        data={"info": "rectangle"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdCenter(
-                                    fac.AntdIcon(
-                                        icon="antd-border",
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    html.Div(
                                         style=style(
-                                            fontSize=20,
+                                            width=40,
+                                            borderBottom="4px solid #FFF",
+                                            borderRadius=10,
+                                        ),
+                                    ),
+                                    fac.AntdCenter(
+                                        "横线",
+                                        style=style(
+                                            fontSize=12,
                                             color="#ffffff",
                                         ),
-                                    )
-                                ),
-                                fac.AntdCenter(
-                                    "矩形",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
-                                        # width=10,
                                     ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
+                                ],
+                                size=3,
+                                direction="vertical",
+                            ),
+                            id="drag-element-transverse",
+                            style=style(
+                                height=45,
+                                cursor="grab",  # 鼠标手势
+                            ),
                         ),
-                        id="drag-element-rectangle",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
+                    ],
+                    id="drag-element-transverse-click",
+                    className="hover-div",
+                ),
+                content="元素：横线",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
+            ),
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素竖线
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-vertical",
+                            data={"info": "vertical"},
                         ),
-                    ),
-                ],
-                id="drag-element-rectangle-click",
-                className="hover-div",
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    html.Div(
+                                        style=style(
+                                            height=30,
+                                            borderLeft="4px solid #FFF",
+                                            borderRadius=5,
+                                        ),
+                                    ),
+                                    fac.AntdCenter(
+                                        "竖线",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                            width=10,
+                                        ),
+                                    ),
+                                ],
+                                size=3,
+                            ),
+                            id="drag-element-vertical",
+                            style=style(
+                                height=45,
+                                cursor="grab",  # 鼠标手势
+                            ),
+                        ),
+                    ],
+                    id="drag-element-vertical-click",
+                    className="hover-div",
+                ),
+                content="元素：竖线",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
+            ),
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素矩形
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-rectangle",
+                            data={"info": "rectangle"},
+                        ),
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    fac.AntdCenter(
+                                        fac.AntdIcon(
+                                            icon="antd-border",
+                                            style=style(
+                                                fontSize=20,
+                                                color="#ffffff",
+                                            ),
+                                        )
+                                    ),
+                                    fac.AntdCenter(
+                                        "矩形",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                            # width=10,
+                                        ),
+                                    ),
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-rectangle",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
+                        ),
+                    ],
+                    id="drag-element-rectangle-click",
+                    className="hover-div",
+                ),
+                content="元素：矩形",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
             ),
             fac.AntdDivider(
                 direction="vertical",
                 lineColor="red",
                 className={"height": "35px"},
             ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素文字
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-text",
-                        data={"info": "text"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdIcon(
-                                    icon="antd-file-text",
-                                    style=style(
-                                        fontSize=20,
-                                        color="#ffffff",
-                                    ),
-                                ),
-                                fac.AntdCenter(
-                                    "文字",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
-                                    ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素文字
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-text",
+                            data={"info": "text"},
                         ),
-                        id="drag-element-text",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-text-click",
-                className="hover-div",
-            ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素图片
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-picture",
-                        data={"info": "picture"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdIcon(
-                                    icon="antd-picture",
-                                    style=style(
-                                        fontSize=20,
-                                        color="#ffffff",
-                                    ),
-                                ),
-                                fac.AntdCenter(
-                                    "图片",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
-                                    ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
-                        ),
-                        id="drag-element-picture",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-picture-click",
-                className="hover-div",
-            ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素二维码
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-qrcode",
-                        data={"info": "qrcode"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdCenter(
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
                                     fac.AntdIcon(
-                                        icon="antd-qrcode",
+                                        icon="antd-file-text",
                                         style=style(
                                             fontSize=20,
                                             color="#ffffff",
                                         ),
-                                    )
-                                ),
-                                fac.AntdCenter(
-                                    "二维码",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
                                     ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
+                                    fac.AntdCenter(
+                                        "文字",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                        ),
+                                    ),
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-text",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
                         ),
-                        id="drag-element-qrcode",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-qrcode-click",
-                className="hover-div",
+                    ],
+                    id="drag-element-text-click",
+                    className="hover-div",
+                ),
+                content="元素：文字",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
             ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素条形码
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-barcode",
-                        data={"info": "barcode"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdCenter(
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素图片
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-picture",
+                            data={"info": "picture"},
+                        ),
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
                                     fac.AntdIcon(
-                                        icon="antd-bar-code",
+                                        icon="antd-picture",
                                         style=style(
                                             fontSize=20,
                                             color="#ffffff",
                                         ),
-                                    )
-                                ),
-                                fac.AntdCenter(
-                                    "条形码",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
                                     ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
+                                    fac.AntdCenter(
+                                        "图片",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                        ),
+                                    ),
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-picture",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
                         ),
-                        id="drag-element-barcode",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
+                    ],
+                    id="drag-element-picture-click",
+                    className="hover-div",
+                ),
+                content="元素：图片",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
+            ),
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素二维码
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-qrcode",
+                            data={"info": "qrcode"},
                         ),
-                    ),
-                ],
-                id="drag-element-barcode-click",
-                className="hover-div",
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    fac.AntdCenter(
+                                        fac.AntdIcon(
+                                            icon="antd-qrcode",
+                                            style=style(
+                                                fontSize=20,
+                                                color="#ffffff",
+                                            ),
+                                        )
+                                    ),
+                                    fac.AntdCenter(
+                                        "二维码",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                        ),
+                                    ),
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-qrcode",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
+                        ),
+                    ],
+                    id="drag-element-qrcode-click",
+                    className="hover-div",
+                ),
+                content="元素：二维码",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
+            ),
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素条形码
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-barcode",
+                            data={"info": "barcode"},
+                        ),
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    fac.AntdCenter(
+                                        fac.AntdIcon(
+                                            icon="antd-bar-code",
+                                            style=style(
+                                                fontSize=20,
+                                                color="#ffffff",
+                                            ),
+                                        )
+                                    ),
+                                    fac.AntdCenter(
+                                        "条形码",
+                                        style=style(
+                                            fontSize=12,
+                                            color="#ffffff",
+                                        ),
+                                    ),
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-barcode",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
+                        ),
+                    ],
+                    id="drag-element-barcode-click",
+                    className="hover-div",
+                ),
+                content="元素：条形码",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
             ),
             fac.AntdDivider(
                 direction="vertical",
                 lineColor="red",
                 className={"height": "35px"},
             ),
-            fuc.FefferyDiv(
-                [
-                    # 绑定需要拖拽的元素表格
-                    fuc.FefferyListenDrag(
-                        targetSelector="#drag-element-table",
-                        data={"info": "table"},
-                    ),
-                    fac.AntdCenter(
-                        fac.AntdSpace(
-                            [
-                                fac.AntdCenter(
-                                    fac.AntdIcon(
-                                        icon="bi-table",
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    [
+                        # 绑定需要拖拽的元素表格
+                        fuc.FefferyListenDrag(
+                            targetSelector="#drag-element-table",
+                            data={"info": "table"},
+                        ),
+                        fac.AntdCenter(
+                            fac.AntdSpace(
+                                [
+                                    fac.AntdCenter(
+                                        fac.AntdIcon(
+                                            icon="bi-table",
+                                            style=style(
+                                                fontSize=20,
+                                                color="#ffffff",
+                                            ),
+                                        )
+                                    ),
+                                    fac.AntdCenter(
+                                        "表格",
                                         style=style(
-                                            fontSize=20,
+                                            fontSize=12,
                                             color="#ffffff",
                                         ),
-                                    )
-                                ),
-                                fac.AntdCenter(
-                                    "表格",
-                                    style=style(
-                                        fontSize=12,
-                                        color="#ffffff",
                                     ),
-                                ),
-                            ],
-                            size=0,
-                            direction="vertical",
+                                ],
+                                size=0,
+                                direction="vertical",
+                            ),
+                            id="drag-element-table",
+                            style=style(
+                                cursor="grab",  # 鼠标手势
+                            ),
                         ),
-                        id="drag-element-table",
-                        style=style(
-                            cursor="grab",  # 鼠标手势
-                        ),
-                    ),
-                ],
-                id="drag-element-table-click",
-                className="hover-div",
+                    ],
+                    id="drag-element-table-click",
+                    className="hover-div",
+                ),
+                content="元素：表格",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
             ),
         ],
         size=20,

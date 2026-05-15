@@ -166,38 +166,49 @@ def layout():
                 id="help-zoom-out",
                 className="hover-div",
             ),
-            fuc.FefferyDiv(
-                fac.AntdCenter(
-                    fac.AntdIcon(
-                        icon="antd-delete",
+            fac.AntdPopover(
+                fuc.FefferyDiv(
+                    fac.AntdCenter(
+                        fac.AntdIcon(
+                            icon="antd-delete",
+                            style=style(
+                                fontSize=24,
+                                color="#ffffff",
+                            ),
+                        ),
                         style=style(
-                            fontSize=24,
-                            color="#ffffff",
+                            height=45,
                         ),
                     ),
-                    style=style(
-                        height=45,
-                    ),
+                    id="help-delete-data",
+                    className="hover-div",
                 ),
-                id="help-delete-data",
-                className="hover-div",
+                content="清除布局",
+                placement="left",
+                arrow="hide",
+                color="rgb(255,255,255,0.5)",
+                styles={
+                    "body": {
+                        "padding": "2px",
+                    }
+                },
             ),
-            fuc.FefferyDiv(
-                fac.AntdCenter(
-                    fac.AntdIcon(
-                        icon="antd-container",
-                        style=style(
-                            fontSize=26,
-                            color="#ffffff",
-                        ),
-                    ),
-                    style=style(
-                        height=45,
-                    ),
-                ),
-                id="help-refresh-layout",
-                className="hover-div",
-            ),
+            # fuc.FefferyDiv(
+            #     fac.AntdCenter(
+            #         fac.AntdIcon(
+            #             icon="antd-container",
+            #             style=style(
+            #                 fontSize=26,
+            #                 color="#ffffff",
+            #             ),
+            #         ),
+            #         style=style(
+            #             height=45,
+            #         ),
+            #     ),
+            #     id="help-refresh-layout",
+            #     className="hover-div",
+            # ),
         ],
         size=20,
         style=style(
