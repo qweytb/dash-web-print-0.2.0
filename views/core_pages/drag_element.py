@@ -874,17 +874,17 @@ def drag_element_layout(
                 "y": element_config.get("y"),
             },
             style=style(border="1px dashed #000") if not element_preview else None,
-            direction=["top", "right", "bottom", "left"] if not element_preview else [],
+            direction=[],  # ["top", "right", "bottom", "left"] if not element_preview else [],
             disableDragging=element_preview or element_config["lock"],
         )
 
     elif element_type == "table":
         element_config = {
-            "thead": element_config.get("thead", 1),  # 是否显示表头
-            "row": element_config.get("row", 5),  # 列数
-            "row_h": element_config.get("row_h", 20),  # 行高
-            "row_w": element_config.get("row_w", 30),  # 行宽
-            "width": element_config.get("width", 300),  # 表宽
+            "thead": element_config_.get("thead", 1),  # 是否显示表头
+            "row": element_config_.get("row", 5),  # 列数
+            "row_h": element_config_.get("row_h", 20),  # 行高
+            "row_w": element_config_.get("row_w", 30),  # 行宽
+            "width": element_config_.get("width", 300),  # 表宽
             "lock": element_config_.get("lock", False),  # 锁定
             "x": element_config_.get("x", element_x_y["x"]),
             "y": element_config_.get("y", element_x_y["y"]),
@@ -956,7 +956,7 @@ def drag_element_layout(
                 "y": element_config.get("y"),
             },
             style=style(border="1px dashed #000") if not element_preview else None,
-            direction=["top", "right", "bottom", "left"] if not element_preview else [],
+            direction=["right", "left"] if not element_preview else [],
             disableDragging=element_preview or element_config["lock"],
         )
 

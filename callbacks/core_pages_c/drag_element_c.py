@@ -248,67 +248,65 @@ def drag_element_rnd_layout(
     logger.debug(f"【拖动随机元素】触发元素：{drag_rnd_id} 坐标：({x},{y})")
 
     # 获取配置的宽高
-    old_w, old_h = old.get("width", 0), old.get("height", 0)
+    old_w, old_h = old.get("width", 0) if element_type != "transverse" else old.get("length", 0), old.get("height", 0) if element_type != "vertical" else old.get("length", 0)
 
     # 获取组件的宽高
     element_w = rnd_size[idx].get("width")
     element_h = rnd_size[idx].get("height")
+    logger.debug(f"【拖动随机元素】当前操作组件宽高：{element_w},{element_h}")
+    element_w = (
+        element_w if element_w is None else int(element_w[:-2]) if isinstance(element_w, str) and element_w.endswith(("px", "pt", "em", "rem")) else element_w if isinstance(element_w, int) else 0
+    )
+    element_h = (
+        element_h if element_h is None else int(element_h[:-2]) if isinstance(element_h, str) and element_h.endswith(("px", "pt", "em", "rem")) else element_h if isinstance(element_h, int) else 0
+    )
 
-    # 保存宽高
-    if element_w != old_w or element_h != old_h:
-        if element_type == "transverse":
-            element_data["element_config"]["length"] = (
-                element_w
-                if element_w is None
-                else int(element_w[:-2])
-                if isinstance(element_w, str) and element_w.endswith(("px", "pt", "em", "rem"))
-                else element_w
-                if isinstance(element_w, int)
-                else 0
-            )
-        elif element_type == "vertical":
-            element_data["element_config"]["length"] = (
-                element_h
-                if element_h is None
-                else int(element_h[:-2])
-                if isinstance(element_h, str) and element_h.endswith(("px", "pt", "em", "rem"))
-                else element_h
-                if isinstance(element_h, int)
-                else 0
-            )
-        else:
-            # 获取组件的高度宽度
-            element_data["element_config"]["width"] = (
-                element_w
-                if element_w is None
-                else int(element_w[:-2])
-                if isinstance(element_w, str) and element_w.endswith(("px", "pt", "em", "rem"))
-                else element_w
-                if isinstance(element_w, int)
-                else 0
-            )
-            element_data["element_config"]["height"] = (
-                element_h
-                if element_h is None
-                else int(element_h[:-2])
-                if isinstance(element_h, str) and element_h.endswith(("px", "pt", "em", "rem"))
-                else element_h
-                if isinstance(element_h, int)
-                else 0
-            )
+    # 判断元素宽高是否改变，并根据元素类型更新配置（transverse和vertical特殊处理）
+    changed = False
 
+    # transverse 类型：width 映射到 length
+    if element_type == "transverse":
+        if element_w != old_w:
+            element_data["element_config"]["length"] = element_w
+            changed = True
+
+    # vertical 类型：height 映射到 length
+    elif element_type == "vertical":
+        if element_h != old_h:
+            element_data["element_config"]["length"] = element_h
+            changed = True
+
+    # barcode 类型当独处理
+    elif element_type == "barcode":
+        pass
+
+    # table 类型当独处理
+    elif element_type == "table":
+        if element_w != old_w:
+            element_data["element_config"]["width"] = element_w
+            changed = True
+
+    # 其他类型：直接保存 width 和 height
+    else:
+        if element_w != old_w:
+            element_data["element_config"]["width"] = element_w
+            changed = True
+        if element_h != old_h:
+            element_data["element_config"]["height"] = element_h
+            changed = True
+
+    if changed:
+        logger.debug(f"【拖动随机元素】元素宽高：{old_w},{old_h} => {element_w},{element_h}")
         logger.debug(f"【拖动随机元素】更新元素配置：{element_data}")
         data["drag_layout_list"][element_data["element_id"]] = element_data
-
         print(f"===========================结束了拖动元素的回调(宽高改变)===========================")
-
         return data, drag_rnd_id
 
     # 🔒 忽略 ≤1px 的抖动（含坐标 & 宽高），防止快速拖动时频繁更新
     old_x, old_y = int(old.get("x", 0)), int(old.get("y", 0))
 
     if abs(x - old_x) <= 1 and abs(y - old_y) <= 1:
-        logger.debug(f"【拖动随机元素】忽略微变动({x},{y}), 返回 no_update")
+        logger.debug(f"【拖动随机元素】忽略微变动({old_x}, {old_y}) -> ({x}, {y}), 返回 no_update")
         print(f"===========================结束了拖动元素的回调（元素坐标改变小于1px）===========================")
         raise dash.exceptions.PreventUpdate  # 阻止更新
     else:
@@ -334,7 +332,7 @@ def drag_element_rnd_layout(
             logger.debug(f"【拖动随机元素】更新元素配置：{element_data}")
             data["drag_layout_list"][element_data["element_id"]] = element_data
 
-            print(f"===========================结束了拖动元素的回调(位置改变)===========================")
+            print(f"===========================结束了拖动元素的回调“开启网格吸附”(位置改变)===========================")
 
             return data, drag_rnd_id
         else:
@@ -352,7 +350,7 @@ def drag_element_rnd_layout(
             logger.debug(f"【拖动随机元素】更新元素配置：{element_data}")
             data["drag_layout_list"][element_data["element_id"]] = element_data
 
-            print(f"===========================结束了拖动元素的回调(位置改变)===========================")
+            print(f"===========================结束了拖动元素的回调“关闭网格吸附”(位置改变)===========================")
 
             return data, drag_rnd_id
 
@@ -426,6 +424,9 @@ def init_load_layout(data, layout_children):
 
         new_children = []
         for k, v in drag_layout_list.items():
+            print(f"===========================开始渲染元素: {k}===========================")
+            logger.debug(f"【初始化加载布局】开始渲染元素: {k}")
+            logger.debug(f"【初始化加载布局】元素配置: {v}")
             deag_layout = drag_element.drag_element_layout(element_config=v)
             deag_layout = deag_layout["rnd"]
             new_children.append(deag_layout)
