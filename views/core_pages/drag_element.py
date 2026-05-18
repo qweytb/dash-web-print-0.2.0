@@ -2160,7 +2160,7 @@ def element_property_attributes_layout(
                         min=0,
                         style={"width": "100%"},
                     ),
-                    label=f"显示行数",
+                    label=f"显示列数",
                 ),
                 span=24,
             ),
